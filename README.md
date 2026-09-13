@@ -64,13 +64,12 @@ python3 scripts/update_remote_rules.py
 
 ## WSL 中的 Codex 无法联网
 
-浏览器能上网但 WSL 中的 Codex 不能用，通常是因为 Windows 的系统代理不会自动传给 WSL。当前配置已打开 `allow-lan`，重新导入生成的 YAML 后，在 WSL 中执行自动检测脚本：
+浏览器能上网但 WSL 中的 Codex 不能用，通常是因为 Windows 的系统代理不会自动传给 WSL。当前配置已经启用 TUN，重新生成并导入 YAML 后，在 Clash Verge 中打开 TUN/增强模式并允许管理员权限。开启后 WSL 和 Codex 不需要设置代理环境变量。
 
 ```bash
-source scripts/wsl-proxy.sh
+unset HTTP_PROXY HTTPS_PROXY ALL_PROXY
+unset http_proxy https_proxy all_proxy
 ```
-
-脚本优先通过 PowerShell 获取 Windows 上带默认网关的网卡 IP，不使用可能指向路由器的 WSL 默认网关；再回退到 WSL DNS 网关。如果 Clash Verge 的混合端口不是默认的 `7890`，先执行 `export CLASH_PROXY_PORT=7897` 再运行脚本。
 
 然后在同一个终端启动 Codex。可以先测试：
 
@@ -78,7 +77,7 @@ source scripts/wsl-proxy.sh
 curl -I https://api.openai.com
 ```
 
-如果仍然连接不上，确认 Clash Verge 正在运行、混合端口是 `7890`，并允许 Windows 防火墙放行该端口。也可以在 Clash Verge 中开启 TUN 模式，但 WSL 场景下使用上面的显式代理变量通常更容易排查。
+如果仍然连接不上，确认 Clash Verge 的 TUN 已启动、当前模式是 `Rule`，并重新导入了最新配置。`scripts/wsl-proxy.sh` 仅保留作 TUN 不可用时的排查备用，不是日常使用步骤。
 
 ## 直接订阅地址
 

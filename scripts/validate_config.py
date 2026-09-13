@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = [
     "Google", "Microsoft", "Apple", "OpenAI", "Telegram", "YouTube", "Steam",
     "Advertising", "ChinaMax", "GEOSITE,CN",
-    "GEOIP,CN", "MATCH,🚀 节点选择", "📶 手动测速",
+    "GEOIP,CN", "MATCH,🚀 节点选择", "📶 手动测速", "tun:", "auto-route: true",
 ]
 
 

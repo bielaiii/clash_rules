@@ -17,6 +17,18 @@ profile:
   store-selected: true
   store-fake-ip: true
 
+# TUN makes WSL/CLI traffic work without HTTP_PROXY environment variables.
+# Clash Verge may ask for administrator permission when enabling the TUN stack.
+tun:
+  enable: true
+  stack: mixed
+  auto-route: true
+  auto-detect-interface: true
+  strict-route: true
+  dns-hijack:
+    - any:53
+    - tcp://any:53
+
 geodata-mode: true
 geodata-loader: memconservative
 geo-auto-update: true

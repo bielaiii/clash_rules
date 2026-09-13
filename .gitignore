@@ -1,0 +1,14 @@
+# Private values: never commit a subscription URL or a controller secret.
+config/subscription.env
+config/rules.env
+config/remote.env
+
+# Generated/publication output.
+dist/clash.yaml
+
+# Local Clash runtime state.
+proxy_providers/
+cache/
+*.log
+__pycache__/
+.venv/

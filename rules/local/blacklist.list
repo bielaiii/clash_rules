@@ -1,0 +1,4 @@
+# 本地黑名单：高于应用规则，默认进入黑名单策略组。
+# 示例：
+# DOMAIN-SUFFIX,example.invalid
+

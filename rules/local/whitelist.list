@@ -1,0 +1,6 @@
+# 本地白名单：最高优先级，直连。
+# 每行使用 Clash classical 规则，例如：
+# DOMAIN-SUFFIX,example.com
+# DOMAIN,internal.example.com
+# IP-CIDR,192.168.0.0/16,no-resolve
+

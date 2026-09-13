@@ -1,0 +1,36 @@
+name: Update remote Clash rules
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 3 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      # Change these values to the Git repository you want to mirror.
+      RULES_REPO_URL: https://github.com/blackmatrix7/ios_rule_script.git
+      RULES_REPO_REF: master
+      REMOTE_RULE_PATHS: rule/Clash
+      REMOTE_RULES_OUTPUT: rules/remote
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Mirror remote Git rules
+        run: python3 scripts/update_remote_rules.py
+      - name: Validate generated configuration
+        run: python3 scripts/validate_config.py
+      - name: Commit changes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add rules/remote
+          git diff --cached --quiet || git commit -m 'chore: update remote rules'
+          git push
+

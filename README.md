@@ -64,13 +64,15 @@ python3 scripts/update_remote_rules.py
 
 ## WSL 中的 Codex 无法联网
 
-浏览器能上网但 WSL 中的 Codex 不能用，通常是因为 Windows 的系统代理不会自动传给 WSL。当前配置已打开 `allow-lan`，重新导入生成的 YAML 后，在 WSL 中执行：
+浏览器能上网但 WSL 中的 Codex 不能用，通常是因为 Windows 的系统代理不会自动传给 WSL。当前配置已打开 `allow-lan`，重新导入生成的 YAML 后，在 WSL 中执行。请把 `WIN_PROXY_HOST` 改成 Windows 的实际局域网 IP；不要盲目使用 `ip route` 的默认网关，因为它可能是路由器地址：
 
 ```bash
-WIN_PROXY_HOST=$(ip route | awk '/default/ {print $3; exit}')
-export HTTP_PROXY="http://${WIN_PROXY_HOST}:7890"
+WIN_PROXY_HOST=192.168.0.102
+# 7890 是本项目生成配置的 mixed-port；如果 Clash Verge 显示的是 7897，就改成 7897。
+WIN_PROXY_PORT=7890
+export HTTP_PROXY="http://${WIN_PROXY_HOST}:${WIN_PROXY_PORT}"
 export HTTPS_PROXY="$HTTP_PROXY"
-export ALL_PROXY="socks5h://${WIN_PROXY_HOST}:7890"
+export ALL_PROXY="socks5h://${WIN_PROXY_HOST}:${WIN_PROXY_PORT}"
 export http_proxy="$HTTP_PROXY"
 export https_proxy="$HTTPS_PROXY"
 export all_proxy="$ALL_PROXY"

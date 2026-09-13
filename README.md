@@ -22,10 +22,10 @@
    `SUBSCRIPTION_URL` 是你的机场/节点订阅地址，不会写入 Git。默认的 `RULES_BASE_URL` 已经可以使用；如果要启用自己的白名单、黑名单等，再编辑 `config/rules.env` 中的 `LOCAL_RULES_BASE_URL`。
 
 2. 如果启用了自有规则，设置本仓库发布后的 Raw 地址。若仓库是
-   `https://github.com/you/clash_rules`，则填写：
+   `https://github.com/bielaiii/clash_rules`，则填写：
 
    ```dotenv
-   LOCAL_RULES_BASE_URL=https://raw.githubusercontent.com/you/clash_rules/main/rules/local
+   LOCAL_RULES_BASE_URL=https://raw.githubusercontent.com/bielaiii/clash_rules/main/rules/local
    ```
 
    本地规则必须先 push，远程 Clash 才能读到最新内容；不填写该地址时，本地规则提供器不会写入生成的 YAML。

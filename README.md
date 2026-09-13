@@ -7,6 +7,7 @@
 - 自定义白名单、黑名单、直连和代理规则放在 `rules/local/`。
 - 远程规则由 `rule-providers` 定时从 GitHub Raw 拉取；`scripts/update_remote_rules.py` 还可以把远程 Git 仓库的规则目录完整镜像到本仓库。
 - `scripts/render_config.py` 生成可直接粘贴到 Clash 的 `dist/clash.yaml`。
+- 节点使用手动选择；配置保留订阅健康检查和 Clash Verge 的手动测速，不会因测速结果自动切换节点。
 - GitHub Actions 每天自动检查远程规则仓库，有变化就提交更新；也可以手动运行。
 
 ## 第一次使用
@@ -60,6 +61,29 @@ python3 scripts/update_remote_rules.py
 配置内置美国、日本、新加坡、香港、台湾地区策略组。应用规则优先于地区规则；例如 OpenAI 命中后会进入 `🤖 OpenAI`，不会被后面的美国 IP 规则抢先匹配。
 
 > 建议使用 mihomo/Clash Meta。传统 Clash 不支持 `GEOSITE`、`rule-providers` 的部分新格式和完整的 `proxy-providers` 能力。
+
+## WSL 中的 Codex 无法联网
+
+浏览器能上网但 WSL 中的 Codex 不能用，通常是因为 Windows 的系统代理不会自动传给 WSL。当前配置已打开 `allow-lan`，重新导入生成的 YAML 后，在 WSL 中执行：
+
+```bash
+WIN_PROXY_HOST=$(ip route | awk '/default/ {print $3; exit}')
+export HTTP_PROXY="http://${WIN_PROXY_HOST}:7890"
+export HTTPS_PROXY="$HTTP_PROXY"
+export ALL_PROXY="socks5h://${WIN_PROXY_HOST}:7890"
+export http_proxy="$HTTP_PROXY"
+export https_proxy="$HTTPS_PROXY"
+export all_proxy="$ALL_PROXY"
+export NO_PROXY="localhost,127.0.0.1,::1"
+```
+
+然后在同一个终端启动 Codex。可以先测试：
+
+```bash
+curl -I https://api.openai.com
+```
+
+如果仍然连接不上，确认 Clash Verge 正在运行、混合端口是 `7890`，并允许 Windows 防火墙放行该端口。也可以在 Clash Verge 中开启 TUN 模式，但 WSL 场景下使用上面的显式代理变量通常更容易排查。
 
 ## 直接订阅地址
 

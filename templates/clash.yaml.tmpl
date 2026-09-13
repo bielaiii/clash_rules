@@ -2,7 +2,9 @@
 # Target: mihomo / Clash Meta
 
 mixed-port: 7890
-allow-lan: false
+# WSL2/其他局域网客户端需要访问 Windows 上的 Clash 端口。
+allow-lan: true
+bind-address: '*'
 mode: rule
 log-level: info
 ipv6: false
@@ -61,70 +63,54 @@ proxy-providers:
 proxy-groups:
   - name: 🚀 节点选择
     type: select
-    proxies: [♻️ 自动选择, 🛟 手动选择, 🌐 常见外国网页, 🇺🇸 美国地区, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, DIRECT]
-  - name: ♻️ 自动选择
-    type: url-test
-    use: [subscription]
-    url: http://www.gstatic.com/generate_204
-    interval: 300
-    tolerance: 50
-  - name: 🛟 手动选择
+    proxies: [📶 手动测速, 🌐 常见外国网页, 🇺🇸 美国地区, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, DIRECT]
+  - name: 📶 手动测速
     type: select
     use: [subscription]
   - name: 🌐 常见外国网页
     type: select
-    proxies: [♻️ 自动选择, 🇺🇸 美国地区, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, DIRECT]
+    proxies: [📶 手动测速, 🇺🇸 美国地区, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, DIRECT]
   - name: 🤖 OpenAI
     type: select
-    proxies: [🚀 节点选择, 🇺🇸 美国地区, 🇯🇵 日本地区, ♻️ 自动选择]
+    proxies: [🚀 节点选择, 🇺🇸 美国地区, 🇯🇵 日本地区, 📶 手动测速]
   - name: Ⓜ️ Microsoft
     type: select
-    proxies: [🚀 节点选择, ♻️ 自动选择, DIRECT]
+    proxies: [🚀 节点选择, 📶 手动测速, DIRECT]
   - name: 🍎 Apple
     type: select
-    proxies: [DIRECT, 🚀 节点选择, ♻️ 自动选择]
+    proxies: [DIRECT, 🚀 节点选择, 📶 手动测速]
   - name: 📲 Telegram
     type: select
-    proxies: [🚀 节点选择, ♻️ 自动选择, 🇸🇬 新加坡地区, 🇭🇰 香港地区]
+    proxies: [🚀 节点选择, 📶 手动测速, 🇸🇬 新加坡地区, 🇭🇰 香港地区]
   - name: 📺 YouTube
     type: select
-    proxies: [🚀 节点选择, ♻️ 自动选择, 🇺🇸 美国地区, 🇯🇵 日本地区]
+    proxies: [🚀 节点选择, 📶 手动测速, 🇺🇸 美国地区, 🇯🇵 日本地区]
   - name: 🎮 Steam
     type: select
-    proxies: [🚀 节点选择, ♻️ 自动选择, DIRECT]
+    proxies: [🚀 节点选择, 📶 手动测速, DIRECT]
   - name: 🇨🇳 中国大陆
     type: select
     proxies: [DIRECT, 🚀 节点选择]
   - name: 🇺🇸 美国地区
-    type: url-test
+    type: select
     use: [subscription]
     filter: '(?i)美国|US|United States|洛杉矶|纽约|西雅图|硅谷|华盛顿'
-    url: http://www.gstatic.com/generate_204
-    interval: 300
   - name: 🇯🇵 日本地区
-    type: url-test
+    type: select
     use: [subscription]
     filter: '(?i)日本|JP|Japan|东京|大阪'
-    url: http://www.gstatic.com/generate_204
-    interval: 300
   - name: 🇸🇬 新加坡地区
-    type: url-test
+    type: select
     use: [subscription]
     filter: '(?i)新加坡|SG|Singapore'
-    url: http://www.gstatic.com/generate_204
-    interval: 300
   - name: 🇭🇰 香港地区
-    type: url-test
+    type: select
     use: [subscription]
     filter: '(?i)香港|HK|Hong Kong'
-    url: http://www.gstatic.com/generate_204
-    interval: 300
   - name: 🇹🇼 台湾地区
-    type: url-test
+    type: select
     use: [subscription]
     filter: '(?i)台湾|TW|Taiwan|台北'
-    url: http://www.gstatic.com/generate_204
-    interval: 300
   - name: 🧱 黑名单
     type: select
     proxies: [REJECT, 🚀 节点选择]

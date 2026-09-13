@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = [
     "Google", "Microsoft", "Apple", "OpenAI", "Telegram", "YouTube", "Steam",
     "Advertising", "ChinaMax", "GEOSITE,CN",
-    "GEOIP,CN", "MATCH,🚀 节点选择",
+    "GEOIP,CN", "MATCH,🚀 节点选择", "📶 手动测速",
 ]
 
 
@@ -25,6 +25,9 @@ def main() -> int:
         return 1
     if any(not path.exists() for path in local):
         print("rules/local 下存在缺失文件", file=sys.stderr)
+        return 1
+    if "type: url-test" in config or "♻️ 自动选择" in config:
+        print("配置仍包含自动测速/自动切换节点组", file=sys.stderr)
         return 1
     print(f"validated {len(config.splitlines())} lines")
     return 0

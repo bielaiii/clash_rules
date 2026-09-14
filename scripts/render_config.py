@@ -32,6 +32,21 @@ def yaml_quote(value: str) -> str:
     return "'" + value.replace("'", "''") + "'"
 
 
+def normalize_raw_base_url(value: str) -> str:
+    """Accept a GitHub tree URL and convert it to the Raw directory URL."""
+    value = value.rstrip("/")
+    marker = "/tree/"
+    if value.startswith("https://github.com/") and marker in value:
+        repository, revision_and_path = value.split(marker, 1)
+        parts = repository.split("/")
+        if len(parts) >= 5:
+            owner, repo = parts[3], parts[4]
+            revision, separator, path = revision_and_path.partition("/")
+            raw = f"https://raw.githubusercontent.com/{owner}/{repo}/{revision}"
+            return raw + (f"/{path}" if separator else "")
+    return value
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", default=str(ROOT / "dist" / "clash.yaml"))
@@ -43,7 +58,7 @@ def main() -> int:
     env = {**rules_env, **subscription_env}
     values = {
         "SUBSCRIPTION_URL": get_value("SUBSCRIPTION_URL", env),
-        "LOCAL_RULES_BASE_URL": get_value("LOCAL_RULES_BASE_URL", env).rstrip("/"),
+        "LOCAL_RULES_BASE_URL": normalize_raw_base_url(get_value("LOCAL_RULES_BASE_URL", env)),
         "RULES_BASE_URL": get_value(
             "RULES_BASE_URL", env,
             "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash",

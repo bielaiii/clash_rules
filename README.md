@@ -1,86 +1,64 @@
-# Clash 分流配置
+# Clash 分流全局扩展脚本
 
-这是一个面向 mihomo/Clash Meta 的可维护配置模板：
+这是给 mihomo / Clash Meta 使用的 Clash Verge Rev 全局扩展配置和全局扩展脚本。订阅地址由 Clash Verge Rev 自己管理，两个文件只负责在订阅配置上叠加基础设置、DNS、TUN、策略组和分流规则。
 
-- 节点订阅地址放在未提交的 `config/subscription.env`，规则地址放在独立的 `config/rules.env`，两者解耦。
-- `RULES_BASE_URL` 默认使用知名开源规则仓库；`LOCAL_RULES_BASE_URL` 是可选项，只有你维护自有规则时才填写。
-- 自定义白名单、黑名单、直连和代理规则放在 `rules/local/`。
-- 远程规则由 `rule-providers` 定时从 GitHub Raw 拉取；`scripts/update_remote_rules.py` 还可以把远程 Git 仓库的规则目录完整镜像到本仓库。
-- `scripts/render_config.py` 生成可直接粘贴到 Clash 的 `dist/clash.yaml`。
-- 节点使用手动选择；配置保留订阅健康检查和 Clash Verge 的手动测速，不会因测速结果自动切换节点。
-- GitHub Actions 每天自动检查远程规则仓库，有变化就提交更新；也可以手动运行。
+这样设置一次即可：以后点击 Clash Verge Rev 的“更新订阅”时，新节点会自动进入 `📶 手动测速`，不需要重新运行本仓库的 Python 脚本，也不需要重新生成完整 YAML。
 
-## 第一次使用
+## 使用方法：添加两个文件
 
-1. 复制环境文件并填写订阅地址；需要自有规则时再填写规则地址：
+1. 在 Clash Verge Rev 中正常添加并启用你的机场订阅。
+2. 打开 Clash Verge Rev 的“设置 → 覆写/扩展配置”，新建或导入 [`global_override.yaml`](./global_override.yaml)。
+3. 再打开“设置 → 覆写/扩展脚本 → 全局扩展脚本”，导入 [`global_script.js`](./global_script.js)。
+4. 保存并重新应用订阅。之后只需更新原来的订阅即可。
 
-   ```bash
-   cp config/subscription.env.example config/subscription.env
-   cp config/rules.env.example config/rules.env
-   $EDITOR config/subscription.env
-   ```
+两个文件都可以直接复制粘贴；如果仓库已发布，也可以分别使用 Raw 地址：
 
-   `SUBSCRIPTION_URL` 是你的机场/节点订阅地址，不会写入 Git。默认的 `RULES_BASE_URL` 已经可以使用；如果要启用自己的白名单、黑名单等，再编辑 `config/rules.env` 中的 `LOCAL_RULES_BASE_URL`。
-
-2. 如果启用了自有规则，设置本仓库发布后的 Raw 地址。若仓库是
-   `https://github.com/bielaiii/clash_rules`，则填写：
-
-   ```dotenv
-   LOCAL_RULES_BASE_URL=https://raw.githubusercontent.com/bielaiii/clash_rules/main/rules/local
-   ```
-
-   本地规则必须先 push，远程 Clash 才能读到最新内容；不填写该地址时，本地规则提供器不会写入生成的 YAML。
-
-3. 生成配置并检查：
-
-   ```bash
-   python3 scripts/render_config.py
-   python3 scripts/validate_config.py
-   ```
-
-   输出文件为 `dist/clash.yaml`。在 Clash/Mihomo 中导入它即可；之后 Clash 会按 `rule-providers` 的 `interval` 自动更新规则，配置本身则通过你发布的 Raw URL 更新。
-
-## 远程 Git 规则仓库
-
-默认源是 [blackmatrix7/ios_rule_script](https://github.com/blackmatrix7/ios_rule_script)，覆盖 Google、Microsoft、Apple、OpenAI、Telegram、YouTube、Steam 和广告规则。要换成自己的规则仓库：
-
-```bash
-cp config/remote.env.example config/remote.env
-$EDITOR config/remote.env
-python3 scripts/update_remote_rules.py
+```text
+https://raw.githubusercontent.com/bielaiii/clash_rules/main/global_override.yaml
+https://raw.githubusercontent.com/bielaiii/clash_rules/main/global_script.js
 ```
 
-`REMOTE_RULE_PATHS` 可以写多个相对目录，逗号分隔；脚本会把这些目录下的全部规则文件同步到 `rules/remote/`，因此远程仓库新增规则文件也会被纳入镜像。规则在线使用时仍由 `RULES_BASE_URL` 直接拉取，能减少本仓库提交大文件；镜像目录主要用于审计、备份和 CI 检查。
+全局扩展配置负责固定字段和规则集；全局扩展脚本的入口是 `main(config, profileName)`，负责使用 `include-all` 和地区过滤器从当前订阅动态构造节点组。具体入口和执行顺序见 [Clash Verge Rev 扩展文档](https://www.clashverge.dev/guide/extend.html) 与 [自定义脚本文档](https://www.clashverge.dev/guide/script.html)。
 
-若把本仓库放到 GitHub，启用 Actions 后即可每天自动同步：`.github/workflows/update-rules.yml`。首次使用时请在 workflow 的 `env` 中把 `RULES_REPO_URL` 改成你的远程 Git 仓库。
+默认配置不依赖 Geo 数据库。如果需要 GeoIP/GeoSite 分流，使用 [`optional/geoip/global_override.yaml`](./optional/geoip/global_override.yaml) 替换根目录的 `global_override.yaml`，继续使用根目录的 `global_script.js`；不要同时启用两个覆写配置。GeoIP 版会由 mihomo 根据 `geox-url` 下载完整 Geo 数据库，并按配置自动更新。[mihomo GEO 配置说明](https://wiki.metacubex.one/en/config/general/)
+
+## 脚本里的可调项
+
+如果使用本仓库默认规则，两个文件无需修改。若需要调整自有规则地址，编辑 [`global_override.yaml`](./global_override.yaml) 中 `LocalWhitelist`、`LocalBlacklist`、`LocalDirect` 和 `LocalProxy` 的 URL。
+
+远程规则默认使用 blackmatrix7；如果需要换规则源，请在 [`global_override.yaml`](./global_override.yaml) 中批量替换 `https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash`。
+
+当前自有规则地址默认是：
+
+```text
+https://raw.githubusercontent.com/bielaiii/clash_rules/main/rules/local
+```
+
+如果你修改了 `rules/local/`，需要先 push 到该 Raw 地址对应的仓库；Clash 会按 86400 秒间隔更新规则集。订阅节点本身仍由 Clash Verge Rev 的订阅更新机制负责。
 
 ## 分流逻辑
 
-匹配顺序是：本地白名单 → 本地黑名单 → 广告拦截 → 具体应用（OpenAI/Google/Microsoft/Apple/Telegram/YouTube/Steam）→ 中国大陆域名/IP → 常见外国网站 → 国家/地区 IP → 兜底。
+匹配顺序为：本地白名单 → 本地黑名单 → 本地直连/代理 → 广告拦截 → 指定外国网站 → OpenAI → Google → Microsoft → Apple → Telegram → YouTube → Steam → 中国大陆规则集 → `🐟 漏网之鱼`。
 
-配置内置美国、日本、新加坡、香港、台湾地区策略组，并为 Google 和 YouTube 保留独立的规则集与策略组。OpenAI 命中后直接进入 `🇺🇸 美国地区`，不会被后面的地区 IP 规则改派；Google 和 YouTube 则分别进入 `🌐 常见外国网页` 与 `📺 YouTube`。
+Patreon、Discord、Pixiv、WNACG、MediaFire 和 MissKon 已加入 `🌐 常见外国网页`。未命中的流量进入 `🐟 漏网之鱼`，可在那里选择节点总组、常见外国网页、地区组或 `DIRECT`。节点组是手动选择，不会因为测速结果自动切换当前选择。
 
-> 建议使用 mihomo/Clash Meta。传统 Clash 不支持 `GEOSITE`、`rule-providers` 的部分新格式和完整的 `proxy-providers` 能力。
+启用 TUN 后，WSL 和不读取系统代理的软件也可以被 mihomo 接管。Clash Verge Rev 可能要求管理员权限；如果 TUN 不可用，可以参考 [`scripts/wsl-proxy.sh`](./scripts/wsl-proxy.sh) 做备用排查。
 
-## WSL 中的 Codex 无法联网
-
-浏览器能上网但 WSL 中的 Codex 不能用，通常是因为 Windows 的系统代理不会自动传给 WSL。当前配置已经启用 TUN，重新生成并导入 YAML 后，在 Clash Verge 中打开 TUN/增强模式并允许管理员权限。开启后 WSL 和 Codex 不需要设置代理环境变量。
+## 本地检查
 
 ```bash
-unset HTTP_PROXY HTTPS_PROXY ALL_PROXY
-unset http_proxy https_proxy all_proxy
+make test-extension
 ```
 
-然后在同一个终端启动 Codex。可以先测试：
+仓库仍保留 [`scripts/render_config.py`](./scripts/render_config.py) 和 `templates/clash.yaml.tmpl`，它们用于需要独立完整 YAML 的场景；日常使用全局扩展脚本时不需要运行它们。
+
+## 远程规则镜像
+
+如果需要把远程 Git 规则仓库镜像到本地审计或备份：
 
 ```bash
-curl -I https://api.openai.com
+cp config/remote.env.example config/remote.env
+python3 scripts/update_remote_rules.py
 ```
 
-如果仍然连接不上，确认 Clash Verge 的 TUN 已启动、当前模式是 `Rule`，并重新导入了最新配置。`scripts/wsl-proxy.sh` 仅保留作 TUN 不可用时的排查备用，不是日常使用步骤。
-
-## 直接订阅地址
-
-推荐把 `dist/clash.yaml` 发布到 GitHub Pages、Release 静态文件或其他 HTTPS 静态地址，然后在 Clash 中订阅该地址。订阅地址和规则地址相互独立：节点订阅由 `config/subscription.env` 的 `SUBSCRIPTION_URL` 控制，规则由 `config/rules.env` 的 `RULES_BASE_URL` 与 `LOCAL_RULES_BASE_URL` 控制。
-
-不要把带有个人 token 的 `dist/clash.yaml` 提交到公开仓库；公开发布时使用私有仓库、受保护的静态托管，或在客户端本地生成配置。
+规则在线使用仍由 `RULES_BASE_URL` 直接拉取；`rules/remote/` 只是镜像目录。

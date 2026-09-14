@@ -58,7 +58,7 @@ python3 scripts/update_remote_rules.py
 
 匹配顺序是：本地白名单 → 本地黑名单 → 广告拦截 → 具体应用（OpenAI/Google/Microsoft/Apple/Telegram/YouTube/Steam）→ 中国大陆域名/IP → 常见外国网站 → 国家/地区 IP → 兜底。
 
-配置内置美国、日本、新加坡、香港、台湾地区策略组。应用规则优先于地区规则；例如 OpenAI 命中后会进入 `🤖 OpenAI`，不会被后面的美国 IP 规则抢先匹配。
+配置内置美国、日本、新加坡、香港、台湾地区策略组，并为 Google 和 YouTube 保留独立的规则集与策略组。OpenAI 命中后直接进入 `🇺🇸 美国地区`，不会被后面的地区 IP 规则改派；Google 和 YouTube 则分别进入 `🌐 常见外国网页` 与 `📺 YouTube`。
 
 > 建议使用 mihomo/Clash Meta。传统 Clash 不支持 `GEOSITE`、`rule-providers` 的部分新格式和完整的 `proxy-providers` 能力。
 

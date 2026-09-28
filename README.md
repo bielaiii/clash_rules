@@ -40,7 +40,7 @@ https://raw.githubusercontent.com/bielaiii/clash_rules/main/rules/local
 
 匹配顺序为：本地白名单 → 本地黑名单 → 本地直连/代理 → 广告拦截 → 指定外国网站 → OpenAI → Google → Microsoft → Apple → Telegram → YouTube → Steam → 中国大陆规则集 → `🐟 漏网之鱼`。
 
-Patreon、Discord、Pixiv、WNACG、MediaFire 和 MissKon 已加入 `🌐 常见外国网页`。未命中的流量进入 `🐟 漏网之鱼`，可在那里选择节点总组、常见外国网页、地区组或 `DIRECT`。节点组是手动选择，不会因为测速结果自动切换当前选择。
+Patreon、Discord、Pixiv、WNACG、MediaFire 和 MissKon 已加入 `🌐 常见外国网页`。未命中的流量进入 `🐟 漏网之鱼`，可在那里选择节点总组、常见外国网页、地区组或 `DIRECT`。日本、新加坡、香港和台湾地区组会每 5 分钟测速并自动选延迟最低的节点；美国地区组和 `📶 手动测速` 仍由你手动选择。YouTube 可选择节点总组或地区组作为出口。
 
 启用 TUN 后，WSL 和不读取系统代理的软件也可以被 mihomo 接管。Clash Verge Rev 可能要求管理员权限；如果 TUN 不可用，可以参考 [`scripts/wsl-proxy.sh`](./scripts/wsl-proxy.sh) 做备用排查。
 

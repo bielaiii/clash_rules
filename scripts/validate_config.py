@@ -35,8 +35,19 @@ def main() -> int:
     if any(item in config for item in ("geodata-mode:", "geox-url:", "GEOSITE,", "GEOIP,")):
         print("配置仍包含 Geo 数据库依赖", file=sys.stderr)
         return 1
-    if config.count("RULE-SET,LocalDirect,DIRECT") != 1 or config.count("RULE-SET,LocalProxy,🚀 节点选择") != 1:
-        print("本地直连/代理规则重复或缺失", file=sys.stderr)
+    local_providers = [
+        f"  {name}:" in config
+        for name in ("LocalWhitelist", "LocalBlacklist", "LocalDirect", "LocalProxy")
+    ]
+    local_rules = [
+        config.count("RULE-SET,LocalDirect,DIRECT"),
+        config.count("RULE-SET,LocalProxy,🚀 节点选择"),
+    ]
+    if any(local_providers) and not all(local_providers):
+        print("本地规则提供器配置不完整", file=sys.stderr)
+        return 1
+    if (all(local_providers) and local_rules != [1, 1]) or (not any(local_providers) and any(local_rules)):
+        print("本地直连/代理规则与提供器配置不一致", file=sys.stderr)
         return 1
     print(f"validated {len(config.splitlines())} lines")
     return 0

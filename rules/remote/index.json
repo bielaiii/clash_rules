@@ -1,7 +1,7 @@
 {
   "repository": "https://github.com/blackmatrix7/ios_rule_script.git",
   "ref": "master",
-  "commit": "124a5ab5504726bad72915baf3a6ca7e2c92ffcd",
+  "commit": "036c097eb26c6a52c4f04ebcb6633043cb942669",
   "paths": [
     "rule/Clash"
   ],

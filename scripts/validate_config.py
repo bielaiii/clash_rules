@@ -26,9 +26,6 @@ def main() -> int:
     if any(not path.exists() for path in local):
         print("rules/local 下存在缺失文件", file=sys.stderr)
         return 1
-    if "type: url-test" in config or "♻️ 自动选择" in config:
-        print("配置仍包含自动测速/自动切换节点组", file=sys.stderr)
-        return 1
     if "/tree/" in config:
         print("规则提供器仍使用 GitHub 网页地址，必须使用 Raw 地址", file=sys.stderr)
         return 1

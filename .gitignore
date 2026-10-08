@@ -5,6 +5,7 @@ config/remote.env
 
 # Generated/publication output.
 dist/clash.yaml
+dist/global_override.yaml
 
 # Local Clash runtime state.
 proxy_providers/

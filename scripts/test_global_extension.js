@@ -39,7 +39,7 @@ groupNames.forEach((name) => assertNoGroupLoop(name, []));
 });
 ["🌐 常见外国网页", "🤖 OpenAI", "Ⓜ️ Microsoft", "🍎 Apple", "📲 Telegram", "📺 YouTube", "🎮 Steam"].forEach((name) => {
   const group = groups.get(name);
-  assert(!group.proxies.includes("📶 手动测速"));
+  assert(group.proxies.includes("📶 手动测速"));
   assert(group.proxies.includes("🚀 节点选择"));
   assert(group.proxies.includes("🇺🇸 美国地区"));
   assert(group.proxies.includes("🇯🇵 日本地区"));
@@ -47,5 +47,25 @@ groupNames.forEach((name) => assertNoGroupLoop(name, []));
   assert(group.proxies.includes("🇭🇰 香港地区"));
   assert(group.proxies.includes("🇹🇼 台湾地区"));
 });
+
+// 覆写模式下全部节点来自 provider；同时覆盖仅有第二机场的情况。
+for (const providerNames of [["airport1"], ["airport2"], ["airport1", "airport2"]]) {
+  const config = {
+    "proxy-providers": Object.fromEntries(providerNames.map((name) => [name, { type: "http" }])),
+    rules: ["DOMAIN-SUFFIX,pixiv.net,🌐 常见外国网页", "MATCH,🐟 漏网之鱼"],
+  };
+  const originalRules = config.rules.slice();
+  const result = main(config);
+  assert.deepStrictEqual(result.rules, originalRules);
+  result["proxy-groups"].forEach((group) => {
+    assert.deepStrictEqual(group.use, providerNames, `${group.name}: missing airport provider`);
+    assert(!group["include-all"], `${group.name}: unexpected subscription node mixing`);
+    if (group.type === "url-test") {
+      assert.strictEqual(group.lazy, false, `${group.name}: should test before first use`);
+      assert.strictEqual(group.interval, 300);
+    }
+  });
+  assert.strictEqual(result["proxy-groups"].find((group) => group.name === "🇺🇸 美国地区").type, "select");
+}
 
 console.log("global extension script passed");

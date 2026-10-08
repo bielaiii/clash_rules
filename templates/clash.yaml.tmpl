@@ -29,9 +29,23 @@ tun:
     - any:53
     - tcp://any:53
 
+sniffer:
+  enable: true
+  force-dns-mapping: true
+  parse-pure-ip: true
+  override-destination: false
+  sniff:
+    HTTP:
+      ports: [80, 8080]
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+
 dns:
   enable: true
   ipv6: false
+  prefer-h3: false
   default-nameserver:
     - 223.5.5.5
     - 119.29.29.29
@@ -44,87 +58,109 @@ dns:
     - localhost.ptlogin2.qq.com
     - '*.msftconnecttest.com'
     - '*.msftncsi.com'
+  # 节点及直连请求独立解析，避免代理 DNS 的循环依赖。
+  proxy-server-nameserver:
+    - 'https://223.5.5.5/dns-query#DIRECT'
+    - 'https://doh.pub/dns-query#DIRECT'
+  direct-nameserver:
+    - 'https://223.5.5.5/dns-query#DIRECT'
+    - 'https://doh.pub/dns-query#DIRECT'
+  # 显式清空订阅可能带入的旧 fallback。
+  fallback: []
   nameserver:
-    - https://dns.alidns.com/dns-query
-    - https://doh.pub/dns-query
-  fallback:
-    - https://doh-pure.onedns.net/dns-query
-    - https://ada.openbld.net/dns-query
-    - https://223.5.5.5/dns-query
-    - https://223.6.6.6/dns-query
-  fallback-filter:
-    geoip: true
-    ipcidr:
-      - 240.0.0.0/4
-      - 0.0.0.0/32
+    - 'https://1.1.1.1/dns-query#🚀 节点选择'
+    - 'https://8.8.8.8/dns-query#🚀 节点选择'
 proxy-providers:
-  subscription:
-    type: http
-    url: __SUBSCRIPTION_URL__
-    interval: 86400
-    path: ./cache/proxy-providers/subscription.yaml
-    health-check:
-      enable: true
-      url: http://www.gstatic.com/generate_204
-      interval: 300
+__SUBSCRIPTION_PROVIDERS__
 
 proxy-groups:
   - name: 🚀 节点选择
     type: select
+    use: [__SUBSCRIPTION_PROVIDER_NAMES__]
     proxies: [📶 手动测速, 🇺🇸 美国地区, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, DIRECT]
   - name: 📶 手动测速
     type: select
-    use: [subscription]
+    use: [__SUBSCRIPTION_PROVIDER_NAMES__]
   - name: 🌐 常见外国网页
     type: select
-    proxies: [🚀 节点选择, 🇺🇸 美国地区, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, DIRECT]
+    use: [__SUBSCRIPTION_PROVIDER_NAMES__]
+    proxies: [🚀 节点选择, 📶 手动测速, 🇺🇸 美国地区, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, DIRECT]
+  - name: 网站分流
+    type: select
+    use: [__SUBSCRIPTION_PROVIDER_NAMES__]
+    proxies: [🚀 节点选择, 📶 手动测速, 🇺🇸 美国地区, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, DIRECT]
   - name: 🤖 OpenAI
     type: select
-    proxies: [🚀 节点选择, 🇺🇸 美国地区, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, DIRECT]
+    use: [__SUBSCRIPTION_PROVIDER_NAMES__]
+    proxies: [🚀 节点选择, 📶 手动测速, 🇺🇸 美国地区, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, DIRECT]
   - name: Ⓜ️ Microsoft
     type: select
-    proxies: [🚀 节点选择, 🇺🇸 美国地区, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, DIRECT]
+    use: [__SUBSCRIPTION_PROVIDER_NAMES__]
+    proxies: [🚀 节点选择, 📶 手动测速, 🇺🇸 美国地区, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, DIRECT]
   - name: 🍎 Apple
     type: select
-    proxies: [🚀 节点选择, 🇺🇸 美国地区, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, DIRECT]
+    use: [__SUBSCRIPTION_PROVIDER_NAMES__]
+    proxies: [🚀 节点选择, 📶 手动测速, 🇺🇸 美国地区, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, DIRECT]
   - name: 📲 Telegram
     type: select
-    proxies: [🚀 节点选择, 🇺🇸 美国地区, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, DIRECT]
+    use: [__SUBSCRIPTION_PROVIDER_NAMES__]
+    proxies: [🚀 节点选择, 📶 手动测速, 🇺🇸 美国地区, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, DIRECT]
   - name: 📺 YouTube
     type: select
-    proxies: [🚀 节点选择, 🇺🇸 美国地区, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, DIRECT]
+    use: [__SUBSCRIPTION_PROVIDER_NAMES__]
+    proxies: [🚀 节点选择, 📶 手动测速, 🇺🇸 美国地区, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, DIRECT]
   - name: 🎮 Steam
     type: select
-    proxies: [🚀 节点选择, 🇺🇸 美国地区, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, DIRECT]
+    use: [__SUBSCRIPTION_PROVIDER_NAMES__]
+    proxies: [🚀 节点选择, 📶 手动测速, 🇺🇸 美国地区, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, DIRECT]
   - name: 🇨🇳 中国大陆
     type: select
-    proxies: [DIRECT, 🚀 节点选择]
+    use: [__SUBSCRIPTION_PROVIDER_NAMES__]
+    proxies: [DIRECT, 🚀 节点选择, 📶 手动测速, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区]
   - name: 🐟 漏网之鱼
     type: select
-    proxies: [🚀 节点选择, 🌐 常见外国网页, 🇺🇸 美国地区, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, DIRECT]
+    use: [__SUBSCRIPTION_PROVIDER_NAMES__]
+    proxies: [🚀 节点选择, 📶 手动测速, 🌐 常见外国网页, 🇺🇸 美国地区, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, DIRECT]
   - name: 🇺🇸 美国地区
     type: select
-    use: [subscription]
+    use: [__SUBSCRIPTION_PROVIDER_NAMES__]
     filter: '(?i)美国|US|United States|洛杉矶|纽约|西雅图|硅谷|华盛顿'
   - name: 🇯🇵 日本地区
-    type: select
-    use: [subscription]
+    type: url-test
+    use: [__SUBSCRIPTION_PROVIDER_NAMES__]
     filter: '(?i)日本|JP|Japan|东京|大阪'
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    lazy: false
   - name: 🇸🇬 新加坡地区
-    type: select
-    use: [subscription]
+    type: url-test
+    use: [__SUBSCRIPTION_PROVIDER_NAMES__]
     filter: '(?i)新加坡|SG|Singapore'
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    lazy: false
   - name: 🇭🇰 香港地区
-    type: select
-    use: [subscription]
+    type: url-test
+    use: [__SUBSCRIPTION_PROVIDER_NAMES__]
     filter: '(?i)香港|HK|Hong Kong'
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    lazy: false
   - name: 🇹🇼 台湾地区
-    type: select
-    use: [subscription]
+    type: url-test
+    use: [__SUBSCRIPTION_PROVIDER_NAMES__]
     filter: '(?i)台湾|TW|Taiwan|台北'
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    lazy: false
   - name: 🧱 黑名单
     type: select
-    proxies: [REJECT, 🚀 节点选择]
+    use: [__SUBSCRIPTION_PROVIDER_NAMES__]
+    proxies: [REJECT, 🚀 节点选择, 📶 手动测速]
 
 rule-providers:
 __LOCAL_RULE_PROVIDERS__
@@ -187,9 +223,9 @@ __LOCAL_RULE_PROVIDERS__
   ChinaMax:
     type: http
     behavior: classical
-    url: '__RULES_BASE_URL__/ChinaMax/ChinaMax_IP.txt'
+    url: '__RULES_BASE_URL__/ChinaMax/ChinaMax.list'
     format: text
-    path: ./cache/rules/china-max-ip.txt
+    path: ./cache/rules/china-max.list
     interval: 86400
 
 rules:
@@ -205,9 +241,25 @@ __LOCAL_RULES__
   - DOMAIN-SUFFIX,pixivision.net,🌐 常见外国网页
   - DOMAIN-SUFFIX,pximg.net,🌐 常见外国网页
   - DOMAIN-SUFFIX,fanbox.cc,🌐 常见外国网页
-  - DOMAIN-SUFFIX,wnacg.com,🌐 常见外国网页
-  - DOMAIN-SUFFIX,wnacg.org,🌐 常见外国网页
-  - DOMAIN-SUFFIX,wnacg.net,🌐 常见外国网页
+  - DOMAIN-SUFFIX,docker.com,🌐 常见外国网页
+  - DOMAIN-SUFFIX,docker.io,🌐 常见外国网页
+  - DOMAIN-SUFFIX,dockerhub.com,🌐 常见外国网页
+  - DOMAIN-SUFFIX,compose-spec.io,🌐 常见外国网页
+  - DOMAIN,d1q6f0aelx0por.cloudfront.net,🌐 常见外国网页
+  - DOMAIN,d2wy8f7a9ursnm.cloudfront.net,🌐 常见外国网页
+  - DOMAIN,d36jcksde1wxzq.cloudfront.net,🌐 常见外国网页
+  - DOMAIN-WILDCARD,jav*,网站分流
+  - DOMAIN-SUFFIX,wnacg.com,网站分流
+  - DOMAIN-SUFFIX,wnacg.org,网站分流
+  - DOMAIN-SUFFIX,wnacg.net,网站分流
+  - DOMAIN-SUFFIX,18comic.vip,网站分流
+  - DOMAIN-SUFFIX,18comic.org,网站分流
+  - DOMAIN-SUFFIX,18comic.ink,网站分流
+  - DOMAIN-SUFFIX,jmcomic-zzz.one,网站分流
+  - DOMAIN-SUFFIX,jmcomic-zzz.org,网站分流
+  - DOMAIN-SUFFIX,18comic-daima.vip,网站分流
+  - DOMAIN-SUFFIX,18comic-daima.org,网站分流
+  - DOMAIN-SUFFIX,18comic-dwo.cc,网站分流
   - DOMAIN-SUFFIX,mediafire.com,🌐 常见外国网页
   - DOMAIN-SUFFIX,mediafireusercontent.com,🌐 常见外国网页
   - DOMAIN-SUFFIX,misskon.com,🌐 常见外国网页
@@ -226,6 +278,6 @@ __LOCAL_RULES__
   - RULE-SET,Telegram,📲 Telegram
   - RULE-SET,YouTube,📺 YouTube
   - RULE-SET,Steam,🎮 Steam
-  - RULE-SET,ChinaMax,🇨🇳 中国大陆
+  - RULE-SET,ChinaMax,🇨🇳 中国大陆,no-resolve
   # 未被国内规则集命中的域名统一交给外国网页组，不再依赖 GeoSite。
   - MATCH,🐟 漏网之鱼

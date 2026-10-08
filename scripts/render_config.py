@@ -56,8 +56,15 @@ def main() -> int:
     subscription_env = load_env(ROOT / "config" / "subscription.env")
     rules_env = load_env(ROOT / "config" / "rules.env")
     env = {**rules_env, **subscription_env}
+    subscription_urls = [
+        get_value("SUBSCRIPTION_URL", env),
+        get_value("SUBSCRIPTION_URL_2", env),
+    ]
+    subscription_urls = [
+        url for url in subscription_urls
+        if url and not url.endswith("your-subscription-url")
+    ]
     values = {
-        "SUBSCRIPTION_URL": get_value("SUBSCRIPTION_URL", env),
         "LOCAL_RULES_BASE_URL": normalize_raw_base_url(get_value("LOCAL_RULES_BASE_URL", env)),
         "RULES_BASE_URL": get_value(
             "RULES_BASE_URL", env,
@@ -65,10 +72,10 @@ def main() -> int:
         ).rstrip("/"),
         "EXTERNAL_CONTROLLER_SECRET": get_value("EXTERNAL_CONTROLLER_SECRET", env),
     }
-    if not values["SUBSCRIPTION_URL"] or values["SUBSCRIPTION_URL"].endswith("your-subscription-url"):
+    if not subscription_urls:
         if not args.allow_placeholder:
-            raise SystemExit("缺少 SUBSCRIPTION_URL：请创建 config/subscription.env 并填写订阅地址。")
-        values["SUBSCRIPTION_URL"] = "https://example.com/your-subscription-url"
+            raise SystemExit("缺少订阅地址：请在 config/subscription.env 中填写 SUBSCRIPTION_URL 和/或 SUBSCRIPTION_URL_2。")
+        subscription_urls = ["https://example.com/your-subscription-url"]
     local_enabled = bool(
         values["LOCAL_RULES_BASE_URL"]
         and "your-name/your-repo" not in values["LOCAL_RULES_BASE_URL"]
@@ -77,6 +84,25 @@ def main() -> int:
         raise SystemExit("LOCAL_RULES_BASE_URL 仍是示例地址；请填写真实地址，或删除该配置以关闭自有规则。")
 
     template = (ROOT / "templates" / "clash.yaml.tmpl").read_text(encoding="utf-8")
+    provider_names = []
+    provider_blocks = []
+    for index, url in enumerate(subscription_urls, start=1):
+        name = "subscription" if index == 1 else f"subscription_{index}"
+        provider_names.append(name)
+        provider_blocks.append(
+            f"""  {name}:
+    type: http
+    url: {yaml_quote(url)}
+    interval: 86400
+    path: ./cache/proxy-providers/{name}.yaml
+    override:
+      additional-prefix: '{'大象' if index == 1 else 'eternal'}｜'
+    health-check:
+      enable: true
+      url: http://www.gstatic.com/generate_204
+      interval: 300
+      lazy: false"""
+        )
     secret_line = (
         f"secret: {yaml_quote(values['EXTERNAL_CONTROLLER_SECRET'])}"
         if values["EXTERNAL_CONTROLLER_SECRET"] else "# secret is intentionally unset"
@@ -120,11 +146,13 @@ def main() -> int:
   - RULE-SET,LocalProxy,🚀 节点选择
 """
     rendered = template.replace("__SECRET_LINE__", secret_line)
+    rendered = rendered.replace("__SUBSCRIPTION_PROVIDERS__", "\n".join(provider_blocks))
+    rendered = rendered.replace("__SUBSCRIPTION_PROVIDER_NAMES__", ", ".join(provider_names))
     rendered = rendered.replace("__LOCAL_RULE_PROVIDERS__", local_providers.rstrip())
     rendered = rendered.replace("__LOCAL_RULES__", local_rules.rstrip())
     for key, value in values.items():
         # Base URLs are already surrounded by quotes in the template because
-        # they are followed by a path suffix; the subscription is not.
+        # they are followed by a path suffix.
         replacement = value if key.endswith("BASE_URL") else yaml_quote(value)
         rendered = rendered.replace(f"__{key}__", replacement)
 

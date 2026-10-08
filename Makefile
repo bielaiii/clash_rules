@@ -1,7 +1,10 @@
-.PHONY: render validate test-extension update-rules
+.PHONY: render render-override validate test-extension update-rules
 
 render:
 	python3 scripts/render_config.py
+
+render-override:
+	python3 scripts/render_override.py
 
 validate: test-extension
 	python3 scripts/validate_config.py

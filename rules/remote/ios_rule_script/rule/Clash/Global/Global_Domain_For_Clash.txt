@@ -1,14 +1,14 @@
 # NAME: Global
 # AUTHOR: blackmatrix7
 # REPO: https://github.com/blackmatrix7/ios_rule_script
-# UPDATED: 2026-09-14 04:08:31
+# UPDATED: 2026-10-06 07:36:42
 # DOMAIN: 128
 # DOMAIN-KEYWORD: 36
-# DOMAIN-SUFFIX: 34764
-# IP-CIDR: 112
+# DOMAIN-SUFFIX: 34784
+# IP-CIDR: 115
 # IP-CIDR6: 4
 # PROCESS-NAME: 1
-# TOTAL: 35045
+# TOTAL: 35068
 1password.drift.click
 adobeereg.com
 agb9r0ad.qllfkl.com
@@ -6003,6 +6003,7 @@ login.microsoftonline.com
 +.classymomsex.com
 +.clau.de
 +.claude.ai
++.claude.dev
 +.claudemcpclient.com
 +.claudemcpcontent.com
 +.claudeusercontent.com
@@ -6157,6 +6158,7 @@ login.microsoftonline.com
 +.code.org
 +.codeberg.org
 +.codeberg.page
++.codebuff.com
 +.codecademy.com
 +.codeforaliving.io
 +.codeforces.com
@@ -9667,11 +9669,13 @@ login.microsoftonline.com
 +.fire-emblem-heroes.com
 +.firebase-settings.crashlytics.com
 +.firebase.com
++.firebase.dev
 +.firebase.io
 +.firebaseapp.com
 +.firech.at
 +.fireemblemawakening.com
 +.fireflyresearch.ac.uk
++.firefox-portal-detection.com
 +.firefox.hu
 +.firefoxtweetmachine.com
 +.firefoxusercontent.com
@@ -10067,6 +10071,7 @@ login.microsoftonline.com
 +.freebigmovies.com
 +.freebs.com
 +.freebsd.org
++.freebuff.com
 +.freecamsfan.com
 +.freecamstars.com
 +.freecartoons.biz
@@ -11156,6 +11161,7 @@ login.microsoftonline.com
 +.googlepagecreator.com
 +.googlephotos.com
 +.googleplay.com
++.googleplaycensorship.com
 +.googleplex.com
 +.googleplus.com
 +.googlescholar.com
@@ -12477,6 +12483,7 @@ login.microsoftonline.com
 +.huanyuju.com
 +.huarenav.com
 +.huarenporn.com
++.huarun.win
 +.huashundg.com
 +.huawen.ac.uk
 +.huaxin-lls.xyz
@@ -15011,7 +15018,6 @@ login.microsoftonline.com
 +.likee.com
 +.likeeapp.ru
 +.likeevideo.com
-+.likeevideo.ru
 +.likeseiyu.com
 +.liketruyen.net
 +.liketwice.com
@@ -16089,6 +16095,7 @@ login.microsoftonline.com
 +.messytube.com
 +.met-nude.com
 +.meta.ai
++.metaaivm.com
 +.metabolomics.ac.uk
 +.metabora.io
 +.metabrainz.org
@@ -18817,6 +18824,7 @@ login.microsoftonline.com
 +.openbook.org.tw
 +.opencas.io
 +.openclaw.ai
++.opencode.ai
 +.opencollective.com
 +.opencreate.org
 +.opendesktop.org
@@ -20519,7 +20527,6 @@ login.microsoftonline.com
 +.qmzdd.com
 +.qnap.com
 +.qnapsupport.net
-+.qobuz.com
 +.qombol.com
 +.qoo-app.com
 +.qoo10.jp
@@ -23366,6 +23373,9 @@ login.microsoftonline.com
 +.stripe-terminal-local-reader.net
 +.stripe.ac.uk
 +.stripe.com
++.stripe.dev
++.stripe.events
++.stripe.global
 +.stripe.network
 +.stripecdn.com
 +.stripparadise.com
@@ -23964,6 +23974,7 @@ login.microsoftonline.com
 +.textminingcentre.ac.uk
 +.texttobuy.org
 +.texture.com
++.tfbnw.net
 +.tferwq.com
 +.tfsallin.net
 +.tgac.ac.uk
@@ -26166,7 +26177,6 @@ login.microsoftonline.com
 +.walker.ac.uk
 +.wallberis.ru
 +.wallet.com
-+.wallhaven.cc
 +.walmart-content.com
 +.walmart.com
 +.walmart.pharmacy
@@ -26526,7 +26536,6 @@ login.microsoftonline.com
 +.wikifeet.com
 +.wikihow.com
 +.wikimediacloud.org
-+.wikimediafoundation.org
 +.wikiporn.tv
 +.wikisexguide.com
 +.wilberes.ru
@@ -29033,6 +29042,7 @@ login.microsoftonline.com
 +.c-span.org
 +.c-spanvideo.org
 +.c.gle
++.c.go-mpulse.net
 +.c.mi.com
 +.c100tibet.org
 +.c2cx.com
@@ -29251,6 +29261,7 @@ login.microsoftonline.com
 +.chinesen.de
 +.chinesenews.net.au
 +.chinesepen.org
++.chineseposters.net
 +.chineseradioseattle.com
 +.chinesetalks.net
 +.chineseupress.com
@@ -30310,6 +30321,7 @@ login.microsoftonline.com
 +.fututrustee.com
 +.fux.com
 +.fuyin.net
++.fuyin116.com
 +.fuyindiantai.org
 +.fuyu.org.tw
 +.fw.cm
@@ -31919,6 +31931,7 @@ login.microsoftonline.com
 +.mummysgold.com
 +.murmur.tw
 +.muscdn.com
++.muse.ai
 +.musicade.net
 +.musical.ly
 +.musixmatch.com
@@ -32171,6 +32184,7 @@ login.microsoftonline.com
 +.nordstromrack.com
 +.nordvpn.com
 +.nos.nl
++.note.com
 +.notepad-plus-plus.org
 +.notion.so
 +.nottinghampost.com
@@ -32734,6 +32748,7 @@ login.microsoftonline.com
 +.qiwen.lu
 +.qkshare.com
 +.qmp4.com
++.qobuz.com
 +.qoos.com
 +.qpoe.com
 +.qq.co.za
@@ -34205,6 +34220,7 @@ login.microsoftonline.com
 +.vansky.com
 +.vaticannews.va
 +.vatn.org
++.vava8.com
 +.vbstatic.co
 +.vcf-online.org
 +.vcfbuilder.org
@@ -34358,6 +34374,7 @@ login.microsoftonline.com
 +.waiwaier.com
 +.walletconnect.com
 +.walletconnect.org
++.wallhaven.cc
 +.wallmama.com
 +.wallornot.org
 +.wallpapercasa.com
@@ -34477,6 +34494,7 @@ login.microsoftonline.com
 +.wikia.com
 +.wikibooks.org
 +.wikidata.org
++.wikifunctions.org
 +.wikileaks-forum.com
 +.wikileaks.ch
 +.wikileaks.com
@@ -34489,12 +34507,14 @@ login.microsoftonline.com
 +.wikilivres.info
 +.wikimapia.org
 +.wikimedia.org
++.wikimediafoundation.org
 +.wikinews.org
 +.wikipedia.com
 +.wikipedia.org
 +.wikiquote.org
 +.wikis.tw
 +.wikisource.org
++.wikispecies.org
 +.wikiunblocked.org
 +.wikiversity.org
 +.wikivoyage.org

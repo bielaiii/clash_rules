@@ -1,13 +1,13 @@
 # NAME: Proxy
 # AUTHOR: blackmatrix7
 # REPO: https://github.com/blackmatrix7/ios_rule_script
-# UPDATED: 2026-09-14 04:08:54
+# UPDATED: 2026-10-04 04:29:34
 # DOMAIN: 9
 # DOMAIN-KEYWORD: 26
-# DOMAIN-SUFFIX: 6784
-# IP-CIDR: 93
+# DOMAIN-SUFFIX: 6795
+# IP-CIDR: 96
 # IP-CIDR6: 4
-# TOTAL: 6916
+# TOTAL: 6930
 payload:
   - 'api.waqi.info'
   - 'aqi.aqicn.org'
@@ -882,6 +882,7 @@ payload:
   - '+.c-span.org'
   - '+.c-spanvideo.org'
   - '+.c.gle'
+  - '+.c.go-mpulse.net'
   - '+.c.mi.com'
   - '+.c100tibet.org'
   - '+.c2cx.com'
@@ -1105,6 +1106,7 @@ payload:
   - '+.chinesen.de'
   - '+.chinesenews.net.au'
   - '+.chinesepen.org'
+  - '+.chineseposters.net'
   - '+.chineseradioseattle.com'
   - '+.chinesetalks.net'
   - '+.chineseupress.com'
@@ -2175,6 +2177,7 @@ payload:
   - '+.fututrustee.com'
   - '+.fux.com'
   - '+.fuyin.net'
+  - '+.fuyin116.com'
   - '+.fuyindiantai.org'
   - '+.fuyu.org.tw'
   - '+.fw.cm'
@@ -3792,6 +3795,7 @@ payload:
   - '+.mummysgold.com'
   - '+.murmur.tw'
   - '+.muscdn.com'
+  - '+.muse.ai'
   - '+.musicade.net'
   - '+.musical.ly'
   - '+.musixmatch.com'
@@ -4046,6 +4050,7 @@ payload:
   - '+.nordstromrack.com'
   - '+.nordvpn.com'
   - '+.nos.nl'
+  - '+.note.com'
   - '+.notepad-plus-plus.org'
   - '+.notion.so'
   - '+.nottinghampost.com'
@@ -4614,6 +4619,7 @@ payload:
   - '+.qiwen.lu'
   - '+.qkshare.com'
   - '+.qmp4.com'
+  - '+.qobuz.com'
   - '+.qoos.com'
   - '+.qpoe.com'
   - '+.qq.co.za'
@@ -6096,6 +6102,7 @@ payload:
   - '+.vansky.com'
   - '+.vaticannews.va'
   - '+.vatn.org'
+  - '+.vava8.com'
   - '+.vbstatic.co'
   - '+.vcf-online.org'
   - '+.vcfbuilder.org'
@@ -6250,6 +6257,7 @@ payload:
   - '+.waiwaier.com'
   - '+.walletconnect.com'
   - '+.walletconnect.org'
+  - '+.wallhaven.cc'
   - '+.wallmama.com'
   - '+.wallornot.org'
   - '+.wallpapercasa.com'
@@ -6371,6 +6379,7 @@ payload:
   - '+.wikia.com'
   - '+.wikibooks.org'
   - '+.wikidata.org'
+  - '+.wikifunctions.org'
   - '+.wikileaks-forum.com'
   - '+.wikileaks.ch'
   - '+.wikileaks.com'
@@ -6383,12 +6392,14 @@ payload:
   - '+.wikilivres.info'
   - '+.wikimapia.org'
   - '+.wikimedia.org'
+  - '+.wikimediafoundation.org'
   - '+.wikinews.org'
   - '+.wikipedia.com'
   - '+.wikipedia.org'
   - '+.wikiquote.org'
   - '+.wikis.tw'
   - '+.wikisource.org'
+  - '+.wikispecies.org'
   - '+.wikiunblocked.org'
   - '+.wikiversity.org'
   - '+.wikivoyage.org'

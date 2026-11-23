@@ -89,7 +89,15 @@ proxy-groups:
     type: select
     use: [__SUBSCRIPTION_PROVIDER_NAMES__]
     proxies: [🚀 节点选择, 📶 手动测速, 🇺🇸 美国地区, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, DIRECT]
-  - name: 🤖 OpenAI
+  - name: 🎨 Pixiv
+    type: select
+    use: [__SUBSCRIPTION_PROVIDER_NAMES__]
+    proxies: [🇯🇵 日本地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, 🇸🇬 新加坡地区, 🇺🇸 美国地区, 🚀 节点选择, 📶 手动测速, DIRECT]
+  - name: 🤖 AI
+    type: select
+    use: [__SUBSCRIPTION_PROVIDER_NAMES__]
+    proxies: [🇺🇸 美国地区, 🚀 节点选择, 📶 手动测速, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, DIRECT]
+  - name: Google
     type: select
     use: [__SUBSCRIPTION_PROVIDER_NAMES__]
     proxies: [🚀 节点选择, 📶 手动测速, 🇺🇸 美国地区, 🇯🇵 日本地区, 🇸🇬 新加坡地区, 🇭🇰 香港地区, 🇹🇼 台湾地区, DIRECT]
@@ -124,7 +132,7 @@ proxy-groups:
   - name: 🇺🇸 美国地区
     type: select
     use: [__SUBSCRIPTION_PROVIDER_NAMES__]
-    filter: '(?i)美国|US|United States|洛杉矶|纽约|西雅图|硅谷|华盛顿'
+    filter: '(?i)美国|🇺🇸|United States|洛杉矶|纽约|西雅图|硅谷|华盛顿|(^|[^A-Za-z])US([0-9]|$|[^A-Za-z])'
   - name: 🇯🇵 日本地区
     type: url-test
     use: [__SUBSCRIPTION_PROVIDER_NAMES__]
@@ -237,10 +245,10 @@ __LOCAL_RULES__
   - DOMAIN-SUFFIX,discordapp.com,🌐 常见外国网页
   - DOMAIN-SUFFIX,discordapp.net,🌐 常见外国网页
   - DOMAIN-SUFFIX,discord.gg,🌐 常见外国网页
-  - DOMAIN-SUFFIX,pixiv.net,🌐 常见外国网页
-  - DOMAIN-SUFFIX,pixivision.net,🌐 常见外国网页
-  - DOMAIN-SUFFIX,pximg.net,🌐 常见外国网页
-  - DOMAIN-SUFFIX,fanbox.cc,🌐 常见外国网页
+  - DOMAIN-SUFFIX,pixiv.net,🎨 Pixiv
+  - DOMAIN-SUFFIX,pixivision.net,🎨 Pixiv
+  - DOMAIN-SUFFIX,pximg.net,🎨 Pixiv
+  - DOMAIN-SUFFIX,fanbox.cc,🎨 Pixiv
   - DOMAIN-SUFFIX,docker.com,🌐 常见外国网页
   - DOMAIN-SUFFIX,docker.io,🌐 常见外国网页
   - DOMAIN-SUFFIX,dockerhub.com,🌐 常见外国网页
@@ -271,12 +279,28 @@ __LOCAL_RULES__
   - DOMAIN-SUFFIX,github.blog,🌐 常见外国网页
   - DOMAIN-SUFFIX,github.community,🌐 常见外国网页
   - DOMAIN-SUFFIX,githubstatus.com,🌐 常见外国网页
-  - RULE-SET,OpenAI,🇺🇸 美国地区
-  - RULE-SET,Google,🌐 常见外国网页
+  # YouTube 规则优先，避免其域名被 Google 规则集接管。
+  - RULE-SET,YouTube,📺 YouTube
+  # Google AI、Gemini 和 AI Studio 也统一交给 Google 组。
+  - DOMAIN-SUFFIX,ai.google,Google
+  - DOMAIN-SUFFIX,google.ai,Google
+  - DOMAIN-SUFFIX,gemini.google.com,Google
+  - DOMAIN-SUFFIX,gemini.gstatic.com,Google
+  - DOMAIN,geminiweb-pa.clients6.google.com,Google
+  - DOMAIN,geminiweb-pa.clients.google.com,Google
+  - DOMAIN,geminiweb-pa.googleapis.com,Google
+  - DOMAIN-SUFFIX,aistudio.google.com,Google
+  - DOMAIN-SUFFIX,ai.google.dev,Google
+  - DOMAIN-SUFFIX,generativelanguage.googleapis.com,Google
+  - DOMAIN,alkalimakersuite-pa.clients6.google.com,Google
+  - DOMAIN,proactivebackend-pa.googleapis.com,Google
+  - DOMAIN-SUFFIX,bard.google.com,Google
+  - DOMAIN-SUFFIX,makersuite.google.com,Google
+  - RULE-SET,OpenAI,🤖 AI
+  - RULE-SET,Google,Google
   - RULE-SET,Microsoft,Ⓜ️ Microsoft
   - RULE-SET,Apple,🍎 Apple
   - RULE-SET,Telegram,📲 Telegram
-  - RULE-SET,YouTube,📺 YouTube
   - RULE-SET,Steam,🎮 Steam
   - RULE-SET,ChinaMax,🇨🇳 中国大陆,no-resolve
   # 未被国内规则集命中的域名统一交给外国网页组，不再依赖 GeoSite。

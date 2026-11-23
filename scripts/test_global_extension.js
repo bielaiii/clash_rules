@@ -29,6 +29,14 @@ function assertNoGroupLoop(name, path) {
 assert.strictEqual(output["proxy-groups"].find((group) => group.name === "📶 手动测速")["include-all"], true);
 assert(groupNames.includes("🚀 节点选择"));
 assert(groupNames.includes("🐟 漏网之鱼"));
+assert.strictEqual(groups.get("🎨 Pixiv").type, "select");
+assert.strictEqual(groups.get("🎨 Pixiv").proxies[0], "🇯🇵 日本地区");
+assert.strictEqual(groups.get("🤖 AI").proxies[0], "🇺🇸 美国地区");
+const usFilter = new RegExp(groups.get("🇺🇸 美国地区").filter.replace(/^\(\?i\)/, ""), "i");
+assert(usFilter.test("US-01"));
+assert(usFilter.test("美国-01"));
+assert(!usFilter.test("AUS-01"));
+assert(!usFilter.test("RUS-01"));
 assert.strictEqual(output["rule-providers"].Existing.type, "http");
 assert.strictEqual(output["rule-providers"].Google.stale, true);
 assert.deepStrictEqual(output.rules, ["MATCH,DIRECT"]);
@@ -37,7 +45,7 @@ groupNames.forEach((name) => assertNoGroupLoop(name, []));
   const group = groups.get(name);
   assert(!group.proxies || !group.proxies.includes("📶 手动测速"));
 });
-["🌐 常见外国网页", "🤖 OpenAI", "Ⓜ️ Microsoft", "🍎 Apple", "📲 Telegram", "📺 YouTube", "🎮 Steam"].forEach((name) => {
+["🌐 常见外国网页", "🎨 Pixiv", "🤖 AI", "Google", "Ⓜ️ Microsoft", "🍎 Apple", "📲 Telegram", "📺 YouTube", "🎮 Steam"].forEach((name) => {
   const group = groups.get(name);
   assert(group.proxies.includes("📶 手动测速"));
   assert(group.proxies.includes("🚀 节点选择"));
@@ -52,7 +60,7 @@ groupNames.forEach((name) => assertNoGroupLoop(name, []));
 for (const providerNames of [["airport1"], ["airport2"], ["airport1", "airport2"]]) {
   const config = {
     "proxy-providers": Object.fromEntries(providerNames.map((name) => [name, { type: "http" }])),
-    rules: ["DOMAIN-SUFFIX,pixiv.net,🌐 常见外国网页", "MATCH,🐟 漏网之鱼"],
+    rules: ["DOMAIN-SUFFIX,pixiv.net,🎨 Pixiv", "MATCH,🐟 漏网之鱼"],
   };
   const originalRules = config.rules.slice();
   const result = main(config);

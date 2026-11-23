@@ -33,9 +33,11 @@ https://raw.githubusercontent.com/bielaiii/clash_rules/main/rules/local
 
 ## 分流逻辑
 
-匹配顺序为：本地白名单 → 本地黑名单 → 本地直连/代理 → 广告拦截 → 指定外国网站（含 `网站分流`）→ OpenAI → Google → Microsoft → Apple → Telegram → YouTube → Steam → 中国大陆规则集 → `🐟 漏网之鱼`。
+匹配顺序为：本地白名单 → 本地黑名单 → 本地直连/代理 → 广告拦截 → 指定外国网站（含 `网站分流`）→ YouTube → Google（含 Gemini）→ OpenAI → Microsoft → Apple → Telegram → Steam → 中国大陆规则集 → `🐟 漏网之鱼`。
 
-Patreon、Discord、Pixiv、Docker、MediaFire 和 MissKon 已加入 `🌐 常见外国网页`，Docker 包括网站、认证、镜像仓库及规则源列出的 CDN 域名。特定域名由 `网站分流` 组控制。各分流组可选择对应地区组；日本、新加坡、香港、台湾地区组每 5 分钟后台测速并自动切换到延迟最低的节点，美国地区组保留手动选择。`📶 手动测速` 保留手动选择所有节点的能力。机场 provider 每 5 分钟执行健康检查，关闭懒测速，避免长时间闲置后才触发检查。
+Patreon、Discord、Docker、MediaFire 和 MissKon 已加入 `🌐 常见外国网页`，Docker 包括网站、认证、镜像仓库及规则源列出的 CDN 域名。Pixiv 使用独立的 `🎨 Pixiv` 组，覆盖 `pixiv.net`、`pixivision.net`、图片域名 `pximg.net` 和 `fanbox.cc` 及其子域名，默认选择 `🇯🇵 日本地区`，也可切换其他地区组或两个机场的具体节点。Google 服务（包括 Gemini 网页、AI Studio 和 Gemini API）统一使用 `Google` 组；YouTube 保持独立的 `📺 YouTube` 组；OpenAI 单独使用 `🤖 AI` 组。特定域名由 `网站分流` 组控制。各分流组可选择对应地区组；日本、新加坡、香港、台湾地区组每 5 分钟后台测速并自动切换到延迟最低的节点，美国地区组保留手动选择。`📶 手动测速` 保留手动选择所有节点的能力。机场 provider 每 5 分钟执行健康检查，关闭懒测速，避免长时间闲置后才触发检查。
+
+Gemini 的 `gemini.gstatic.com` 静态资源和 `geminiweb-pa.clients6.google.com` 等网页后端域名也走 `Google` 组；OpenAI 使用 `🤖 AI` 组。配置启用了 `store-selected`，之前的选择会保留。
 
 DNS 将节点域名和直连请求交给国内 DoH，其他域名使用通过 `🚀 节点选择` 连接的境外 DoH。GeoSite 覆写配置还为国内和私有域名指定国内解析。单独配置 `proxy-server-nameserver` 避免解析节点时依赖代理自身，见 [mihomo DNS 配置](https://wiki.metacubex.one/config/dns/)。TUN 开启 HTTP、TLS 和 QUIC 域名嗅探，以补充浏览器自行解析 DNS 时的域名分流；嗅探不覆盖实际连接地址。
 

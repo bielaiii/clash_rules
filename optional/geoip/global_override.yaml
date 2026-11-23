@@ -107,7 +107,13 @@ proxy-groups:
   - name: 网站分流
     type: select
     proxies: [DIRECT]
-  - name: 🤖 OpenAI
+  - name: 🎨 Pixiv
+    type: select
+    proxies: [DIRECT]
+  - name: 🤖 AI
+    type: select
+    proxies: [DIRECT]
+  - name: Google
     type: select
     proxies: [DIRECT]
   - name: Ⓜ️ Microsoft
@@ -258,10 +264,10 @@ rules:
   - DOMAIN-SUFFIX,discordapp.com,🌐 常见外国网页
   - DOMAIN-SUFFIX,discordapp.net,🌐 常见外国网页
   - DOMAIN-SUFFIX,discord.gg,🌐 常见外国网页
-  - DOMAIN-SUFFIX,pixiv.net,🌐 常见外国网页
-  - DOMAIN-SUFFIX,pixivision.net,🌐 常见外国网页
-  - DOMAIN-SUFFIX,pximg.net,🌐 常见外国网页
-  - DOMAIN-SUFFIX,fanbox.cc,🌐 常见外国网页
+  - DOMAIN-SUFFIX,pixiv.net,🎨 Pixiv
+  - DOMAIN-SUFFIX,pixivision.net,🎨 Pixiv
+  - DOMAIN-SUFFIX,pximg.net,🎨 Pixiv
+  - DOMAIN-SUFFIX,fanbox.cc,🎨 Pixiv
   - DOMAIN-SUFFIX,docker.com,🌐 常见外国网页
   - DOMAIN-SUFFIX,docker.io,🌐 常见外国网页
   - DOMAIN-SUFFIX,dockerhub.com,🌐 常见外国网页
@@ -293,13 +299,30 @@ rules:
   - DOMAIN-SUFFIX,github.community,🌐 常见外国网页
   - DOMAIN-SUFFIX,githubstatus.com,🌐 常见外国网页
 
+  # YouTube 规则优先，避免其域名被 Google 规则集接管。
+  - RULE-SET,YouTube,📺 YouTube
+  # Google AI、Gemini 和 AI Studio 也统一交给 Google 组。
+  - DOMAIN-SUFFIX,ai.google,Google
+  - DOMAIN-SUFFIX,google.ai,Google
+  - DOMAIN-SUFFIX,gemini.google.com,Google
+  - DOMAIN-SUFFIX,gemini.gstatic.com,Google
+  - DOMAIN,geminiweb-pa.clients6.google.com,Google
+  - DOMAIN,geminiweb-pa.clients.google.com,Google
+  - DOMAIN,geminiweb-pa.googleapis.com,Google
+  - DOMAIN-SUFFIX,aistudio.google.com,Google
+  - DOMAIN-SUFFIX,ai.google.dev,Google
+  - DOMAIN-SUFFIX,generativelanguage.googleapis.com,Google
+  - DOMAIN,alkalimakersuite-pa.clients6.google.com,Google
+  - DOMAIN,proactivebackend-pa.googleapis.com,Google
+  - DOMAIN-SUFFIX,bard.google.com,Google
+  - DOMAIN-SUFFIX,makersuite.google.com,Google
+
   # 服务规则优先于通用 GeoSite 规则。
-  - RULE-SET,OpenAI,🇺🇸 美国地区
-  - RULE-SET,Google,🌐 常见外国网页
+  - RULE-SET,OpenAI,🤖 AI
+  - RULE-SET,Google,Google
   - RULE-SET,Microsoft,Ⓜ️ Microsoft
   - RULE-SET,Apple,🍎 Apple
   - RULE-SET,Telegram,📲 Telegram
-  - RULE-SET,YouTube,📺 YouTube
   - RULE-SET,Steam,🎮 Steam
 
   # 通用分类：不再要求把每个外国网站手写进配置。

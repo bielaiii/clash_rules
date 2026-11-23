@@ -10,7 +10,20 @@ ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = [
     "Google", "Microsoft", "Apple", "OpenAI", "Telegram", "YouTube", "Steam",
     "Advertising", "ChinaMax", "RULE-SET,ChinaMax,🇨🇳 中国大陆",
-    "MATCH,🐟 漏网之鱼", "📶 手动测速", "tun:", "auto-route: true",
+    "MATCH,🐟 漏网之鱼", "📶 手动测速", "🤖 AI", "tun:", "auto-route: true",
+]
+
+GEMINI_RULES = [
+    "DOMAIN-SUFFIX,ai.google,Google",
+    "DOMAIN-SUFFIX,google.ai,Google",
+    "DOMAIN-SUFFIX,gemini.google.com,Google",
+    "DOMAIN-SUFFIX,gemini.gstatic.com,Google",
+    "DOMAIN,geminiweb-pa.clients6.google.com,Google",
+    "DOMAIN,geminiweb-pa.clients.google.com,Google",
+    "DOMAIN,geminiweb-pa.googleapis.com,Google",
+    "DOMAIN-SUFFIX,aistudio.google.com,Google",
+    "DOMAIN-SUFFIX,ai.google.dev,Google",
+    "DOMAIN-SUFFIX,generativelanguage.googleapis.com,Google",
 ]
 
 
@@ -23,6 +36,21 @@ def main() -> int:
     if missing:
         print("缺少配置项：" + ", ".join(missing), file=sys.stderr)
         return 1
+    for path in (ROOT / "dist" / "clash.yaml", ROOT / "optional" / "geoip" / "global_override.yaml"):
+        rules = path.read_text(encoding="utf-8").splitlines()
+        google_rule = "  - RULE-SET,Google,Google"
+        openai_rule = "  - RULE-SET,OpenAI,🤖 AI"
+        ai_rules = [f"  - {rule}" for rule in GEMINI_RULES]
+        youtube_rule = "  - RULE-SET,YouTube,📺 YouTube"
+        if (
+            rules.count(google_rule) != 1
+            or rules.count(openai_rule) != 1
+            or rules.count(youtube_rule) != 1
+            or rules.index(youtube_rule) > rules.index(google_rule)
+            or any(rules.count(rule) != 1 or rules.index(rule) > rules.index(google_rule) for rule in ai_rules)
+        ):
+            print(f"{path}: Google AI/Gemini/OpenAI 分流规则缺失或顺序错误", file=sys.stderr)
+            return 1
     if any(not path.exists() for path in local):
         print("rules/local 下存在缺失文件", file=sys.stderr)
         return 1
